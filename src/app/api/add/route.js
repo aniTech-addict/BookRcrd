@@ -1,10 +1,10 @@
 import { postBooks } from "@/Lib/Controllers/book.controller";
 
-export function POST(req){
-    const data = req.json;
+export async function POST(req){
+    const data = await req.json();
 
     //fn response: {Object}
-    const response = postBooks(data);
+    const response = await postBooks(data);
 
     if(response.status === 500){
         console.log("------🚨 Error Encountered in Controller ------ \n"+response.error)

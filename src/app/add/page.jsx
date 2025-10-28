@@ -1,6 +1,7 @@
 "use client"
 import {useForm} from "react-hook-form"
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { refresh } from "next/cache";
 
 const AddPage = () => {
@@ -14,14 +15,18 @@ const AddPage = () => {
         publicationDate: ""
       }
     }
-  ) 
+  )
 
   async function pushInfo(data){
-    await axios({
-      method: "POST",
-      url: "http://localhost:3000/api/add",
-      data: data
-    })
+    try {
+      await axios({
+        method: "POST",
+        url: "/api/add",
+        data: data
+      })
+    } catch (error) {
+      console.error("Error adding book:", error);
+    }
   }
   
   
@@ -54,14 +59,14 @@ const AddPage = () => {
 
           <div className="publicationDate flex flex-row gap-3 mt-2">
             <p>Publication Date</p>
-            <input {...register("publicationDate",{required:"Required Field"})}/>
+            <input {...register("publicationDate",{required:"Required Field"})} type="date"/>
             <p className="text-red-400 text-sm">{" *"} {errors.publicationDate?.message}</p>
           </div>
 
           <button type="submit"
           className="bg-amber-300 mt-3 text-black hover:text-gray-800 hover:bg-amber-200 hover:tracking-wider" >
             Submit
-          </button>  
+          </button>
         </div>
         
       </form>

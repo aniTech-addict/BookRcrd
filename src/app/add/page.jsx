@@ -19,7 +19,7 @@ const AddPage = () => {
 
   async function pushInfo(data){
     try {
-      await axios({
+        await axios({
         method: "POST",
         url: "/api/add",
         data: data

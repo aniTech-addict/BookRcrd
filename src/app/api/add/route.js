@@ -1,6 +1,7 @@
 import { postBooks } from "@/Lib/Controllers/book.controller";
-
+import connectDb from "@/Lib/Db/connectDb";
 export async function POST(req){
+    connectDb();
     const data = await req.json();
 
     //fn response: {Object}

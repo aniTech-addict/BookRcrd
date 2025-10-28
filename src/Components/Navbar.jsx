@@ -7,6 +7,7 @@ const Navbar = () => {
             Book Records
         </p>
         <Link href="/" className="m-3 hover:scale-105 hover:text-pink-200">All Books</Link>
+        <Link href="/add" className="m-3 hover:scale-105 hover:text-pink-200">Add Book</Link>
 
     </div>
   )

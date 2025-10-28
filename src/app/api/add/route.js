@@ -1,19 +1,21 @@
-function validData(data){
-    if(!data.title || !data.author || !data.genre || !data.publicationDate){
-        return false
-    }
-    return true
-}
+import { postBooks } from "@/Lib/Controllers/book.controller";
 
 export function POST(req){
-    if (!validData(req.data)){
-        return Response({
-            status:404,
-            message:"some Values are missing"
+    const data = req.json;
+
+    //response:{Object}
+    const response = postBooks(data);
+
+    if(response.status === 500){
+        console.log("------🚨 Error Encountered in Controller ------ \n"+response.error)
+        return new Response(JSON.stringify({error:response.error}), {
+            status: 500,
+            headers: {
+                "Content-Type": "application/json",
+            }
         })
     }
 
-    
     return new Response(JSON.stringify({data:"Added"}), {
         status: 201,
         headers: {

@@ -3,7 +3,7 @@ import { postBooks } from "@/Lib/Controllers/book.controller";
 export function POST(req){
     const data = req.json;
 
-    //response:{Object}
+    //fn response: {Object}
     const response = postBooks(data);
 
     if(response.status === 500){

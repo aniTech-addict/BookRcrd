@@ -11,7 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/books");
+        const response = await axios.get("/api/books");
         setBooks(response.data.data);
 
         console.log(response.data)
@@ -30,10 +30,11 @@ const HomePage = () => {
       <main>
         <section>
           {books.map((book) => (
-            <div key={book.id} className="flex flex-col gap-2 bg-gray-800 p-4 rounded-lg shadow-md mb-4 text-white">
+            <div key={book._id} className="flex flex-col gap-2 bg-gray-800 p-4 rounded-lg shadow-md mb-4 text-white">
               <h3 className="text-xl font-bold">{book.title}</h3>
               <p className="text-gray-300">Author: {book.author}</p>
               <p className="text-gray-300">Genre: {book.genre}</p>
+              <p className="text-gray-300">Publication Date: {new Date(book.publicationDate).toLocaleDateString()}</p>
             </div>
           ))}
 

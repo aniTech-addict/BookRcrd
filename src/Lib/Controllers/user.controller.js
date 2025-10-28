@@ -1,12 +1,40 @@
 import mongoose from "mongoose";
 import USER from "@/Lib/Models/User.model"
+import { validateUserData } from "../Utils/validateUserData";
 
-export function postUser(data){
-    if(data?.username || data?.email ||data?.password){
+import connectDb from "@/Lib/Db/connectDb";
+
+export async function createUser(data){
+
+    await connectDb();
+
+    const userData =  validateUserData(data);
+
+    if( !userData.valid ){
         return {
-            status:404,
-            message:"Fields can't be empty for registration",
+            status:400,
+            message:userData.message
         }
     }
-    const newUser = USER.findOne(email)
+    const existingUser = await USER.findOne({
+        $or :[{ email: data.email }, { username: data.username }]
+    });
+
+    if(existingUser){
+        return {
+            status:409,
+            message:"User Already Exists, Please try logging in instead"
+        }
+    }
+
+    const newUser = new USER(data);
+    await newUser.save();
+
+    return {
+        status:201,
+        message:"User Created Successfully"
+    }
+    //more code about creating and saving user
+
+
 }

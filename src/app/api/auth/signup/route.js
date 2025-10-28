@@ -1,19 +1,19 @@
-import postUser from "@/Lib/Controllers/user.controller";
+import { createUser } from "@/Lib/Controllers/user.controller";
 export async function POST(req){
-    const data = req.json();
-    const response = await postUser(data);
+    const data = await req.json();
+    const response = await createUser(data);
 
     if(response.status === 404){
-        return new Response({
+        return new Response(JSON.stringify({
             status:404,
             message:"Error Occurred",
             error:response.error
-        })
+        }), { status: 404 })
     }
-    
-    return new Response({
-        status:201,
-        message:"User registered"
-    })
-    
+
+    return new Response(JSON.stringify({
+        status:response.status,
+        message:response.message
+    }), { status: response.status })
+
 }

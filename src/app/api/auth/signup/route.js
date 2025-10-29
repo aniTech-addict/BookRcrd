@@ -12,8 +12,9 @@ export async function POST(req){
     }
 
     return new Response(JSON.stringify({
-        status:response.status,
-        message:response.message
-    }), { status: response.status })
+        status:201,
+        message:response.message,
+        token:response.token,
+    }), { status: 201 })
 
 }

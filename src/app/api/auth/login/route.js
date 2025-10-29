@@ -1,0 +1,39 @@
+import { NextResponse } from "next/server" 
+import {loginUser} from "@/Lib/Controllers/user.controller.js";
+
+export async function POST(req){
+    // req = {username||email, password}
+    const data = await req.json();
+    const controllerResponse = await loginUser(data);
+    if(response.status === 400 || response.status === 404 || response.status === 409){
+        return new Response(JSON.stringify({
+            status:controllerResponse.status,
+            message:controllerResponse.message,
+            error:controllerResponse.error || controllerResponse.message
+        }), { status: controllerResponse.status })
+    }
+
+    //controller res = 
+    if (controllerResponse.status === 200) {
+    const { accessToken, refreshToken, user } = controllerResponse;
+
+    const res = NextResponse.json({
+      status: 200,
+      message: "Login successful",
+      accessToken,
+      user,
+    });
+
+    // set httpOnly cookie
+    res.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+
+    return res;
+  }
+
+}

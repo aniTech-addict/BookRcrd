@@ -12,13 +12,33 @@ const LoginPage = () => {
       }
     }
   )
+  const loginUser = async (data) => {
+    const response= null;
+  try{
+      response = await axios({
+      method: "POST",
+      url: "/api/auth/login",
+      data: data
+    })
+  } catch(error){
+      console.error("Error logging in:", error)
+    }
+
+   return new Response(JSON.stringify({status:response.status}),{
+    status:response.status,
+    type:"application/json"
+   })
+
+  }
+
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full bg-blue-900 rounded-lg shadow-md p-6 sm:p-8 md:w-96">
         <h2 className="text-xl font-bold text-center mb-6 sm:text-2xl">Login</h2>
         <form
         onSubmit={handleSubmit((data)=>{
-          //send to user handler
+          loginUser(data);
         })} >
           
           

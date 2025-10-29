@@ -15,17 +15,15 @@ export async function POST(req){
 
     //controller res = 
     if (controllerResponse.status === 200) {
-    const { accessToken, refreshToken, user } = controllerResponse;
+    const  accessToken  = controllerResponse.accessTOken;
 
     const res = NextResponse.json({
       status: 200,
       message: "Login successful",
-      accessToken,
-      user,
     });
 
     // set httpOnly cookie
-    res.cookies.set("refreshToken", refreshToken, {
+    res.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

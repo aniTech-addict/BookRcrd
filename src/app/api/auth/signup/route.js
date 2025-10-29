@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server" 
 import { createUser } from "@/Lib/Controllers/user.controller";
 export async function POST(req){
     const data = await req.json();
@@ -11,10 +12,18 @@ export async function POST(req){
         }), { status: response.status })
     }
 
-    return new Response(JSON.stringify({
-        status:201,
-        message:response.message,
-        token:response.token,
-    }), { status: 201 })
+    const res = NextResponse.json({
+          status: response.status,
+          message: response.message,
+        });
 
+    res.cookies.set("accessToken", response.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+    });
+
+    return res;
 }

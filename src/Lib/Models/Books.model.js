@@ -17,7 +17,11 @@ const BookSchema = new mongoose.Schema({
     publicationDate:{
         type:Date,
         required:true
-    }
+    },
+    // addedBy:{
+    //     type:mongoose.Schema.Types.ObjectId,
+    //     ref:"User"
+    // }
 
 },{timestamps:true})
 

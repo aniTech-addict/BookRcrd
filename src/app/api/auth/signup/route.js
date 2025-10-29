@@ -3,12 +3,12 @@ export async function POST(req){
     const data = await req.json();
     const response = await createUser(data);
 
-    if(response.status === 404){
+    if(response.status === 400 || response.status === 404 || response.status === 409){
         return new Response(JSON.stringify({
-            status:404,
-            message:"Error Occurred",
-            error:response.error
-        }), { status: 404 })
+            status:response.status,
+            message:response.message,
+            error:response.error || response.message
+        }), { status: response.status })
     }
 
     return new Response(JSON.stringify({

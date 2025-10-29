@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { passwordEncrypt } from "../Utils/passwordEncrypt";
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -14,8 +15,16 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+
 },
     {timestamps:true})
 
-    export default mongoose.model("User", UserSchema)
+UserSchema.pre("save", function(next) {
+    this.password = passwordEncrypt(this.password);
+    next();
+})
+
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
+
+export default User;

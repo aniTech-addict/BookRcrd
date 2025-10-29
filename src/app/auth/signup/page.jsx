@@ -25,14 +25,16 @@ const SignupPage = () => {
       }
     }
 
+  const onSubmit = handleSubmit(async (data) => {
+    await postUser(data);
+  });
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full bg-blue-900 rounded-lg shadow-md p-6 sm:p-8 md:w-96">
         <h2 className="text-xl font-bold text-center mb-6 sm:text-2xl">Signup</h2>
         <form
-        onSubmit={handleSubmit((data)=>{
-          postUser(data);
-        })} 
+        onSubmit={onSubmit}
         className="form">
           
           <div className="mb-4 ">

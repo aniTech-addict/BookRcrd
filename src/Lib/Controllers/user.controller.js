@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import USER from "@/Lib/Models/User.model"
 import { validateUserData } from "../Utils/validateUserData";
-import { createToken } from '../Utils/createToken';
+import { createAccessToken, createRefreshToken } from '../Utils/createToken.util.js';
 import connectDb from "@/Lib/Db/connectDb";
 
 
@@ -30,14 +30,18 @@ export async function createUser(data){
     }
 
     const newUser = new USER(data);
-    await newUser.save();
+    
+    const accessToken = createAccessToken(newUser);
+    const refreshToken = createRefreshToken(newUser); // saved in db
+    
 
-    const token = createToken(newUser);
+    newUser.refreshToken = refreshToken;
+    await newUser.save();
 
     return {
         status:201,
         message:"User Created Successfully",
-        token,
+        accessToken: accessToken,
     }
 }
 
@@ -70,14 +74,15 @@ export async function loginUser(data){
         username:existingUser.username,
         email:existingUser.email
     }
-    const accessToken= createAccessToken(user);
-    const refreshToken= createRefreshToken(user);
+    const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user); // saved in db
 
-    //Setting up Cookies , hueheu
+    existingUser.refreshToken = refreshToken;
+    await existingUser.save();
+
     return {
         status:200,
         message:"user authenticated",
-        refreshToken: refreshToken,
         accessToken: accessToken
     }
 }

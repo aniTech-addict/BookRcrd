@@ -13,7 +13,8 @@ export async function createUser(data){
     if( !userData.valid ){
         return {
             status:400,
-            message:userData.message
+            message:userData.message,
+            error: userData.message
         }
     }
     const existingUser = await USER.findOne({

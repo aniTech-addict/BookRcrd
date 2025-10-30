@@ -3,7 +3,7 @@ import USER from "@/Lib/Models/User.model"
 import { validateUserData } from "../Utils/validateUserData";
 import { createAccessToken, createRefreshToken } from '../Utils/createToken.util.js';
 import connectDb from "@/Lib/Db/connectDb";
-
+import bcrypt from "bcrypt"
 
 export async function createUser(data){
 

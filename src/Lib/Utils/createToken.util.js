@@ -7,8 +7,8 @@ export  function createAccessToken(user) {
     username: user.username,
   };
 
-  return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.TOKEN_EXPIRY
+  return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRY
   });
 
 }
@@ -20,7 +20,12 @@ export function createRefreshToken(user){
         username: user.username,
     }
 
+    //console.log("🔴"+process.env.JWT_REFRESH_SECRET)
+    //console.log("🔴"+payload.id)
+    
     const token = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY
     })
+
+    return token
 }

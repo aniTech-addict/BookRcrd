@@ -32,10 +32,11 @@ export async function createUser(data){
     const newUser = new USER(data);
     
     const accessToken = createAccessToken(newUser);
-    const refreshToken = createRefreshToken(newUser); // saved in db
+    const refreshToken =   createRefreshToken(newUser); // saved in db
     
-
+    //console.log("🔴"+refreshToken)
     newUser.refreshToken = refreshToken;
+    //console.log("🔴"+newUser.refreshToken)
     await newUser.save();
 
     return {

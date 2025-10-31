@@ -140,28 +140,28 @@ export async function loginUser(data) {
   try {
     await connectDb();
 
-    // Enhanced input validation
-    const inputValidation = validateInput(data, ['email', 'password']);
-    if (!inputValidation.valid) {
-      return createErrorResponse(HTTP_STATUS.BAD_REQUEST, inputValidation.message);
-    }
+    // // Enhanced input validation
+    // const inputValidation = validateInput(data, ['email', 'password']);
+    // if (!inputValidation.valid) {
+    //   return createErrorResponse(HTTP_STATUS.BAD_REQUEST, inputValidation.message);
+    // }
+    console.log("reached controller")
+    console.log("data:->"+data);
 
-    const existingUser = await USER.findOne({
-      $or: [
-        { email: data.email.toLowerCase().trim() }, 
-        { username: data.username?.trim() }
-      ]
-    }).select('+password refreshToken username email'); // Explicitly include password for comparison
+    const existingUser = await USER.findOne({username:data.username})
+    .select('+password refreshToken username email'); // Explicitly include password for comparison
+
+    console.log(existingUser);
 
     if (!existingUser) {
       return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.USER_NOT_FOUND);
     }
 
-    const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
+    //const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
     
-    if (!isPasswordValid) {
-      return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.PASSWORD_INVALID);
-    }
+    // if (!isPasswordValid) {
+    //   return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.PASSWORD_INVALID);
+    // }
     
     const userData = {
       id: existingUser._id,

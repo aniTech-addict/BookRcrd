@@ -1,6 +1,8 @@
 "use client"
 import {useForm} from "react-hook-form"
 import axios from "axios"
+import Link from "next/link"
+import { useState } from "react";
 const SignupPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(
     {
@@ -12,6 +14,8 @@ const SignupPage = () => {
     }
   )
 
+  const [userExists, setUserExists] = useState(false);
+
   async function postUser(data){
       try {
         const response = await axios({
@@ -19,9 +23,11 @@ const SignupPage = () => {
           url: "/api/auth/signup",
           data: data
         })
-        console.log(response)
       } catch (error) {
         console.error("Error posting user:", error)
+        if(error.response.status == 409){
+          setUserExists(true);
+        }
       }
     }
 
@@ -61,6 +67,14 @@ const SignupPage = () => {
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Signup
           </button>
+
+          <p className={`p-2 text-red-500
+            ${userExists ? "visible" : "invisible"}
+          `}>
+            user already exists.
+            <Link href="/auth/login" className="hover:text-amber-300"> login </Link>
+            instead ?
+          </p>
 
         </form>
       </div>

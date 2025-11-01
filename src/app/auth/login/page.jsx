@@ -14,14 +14,15 @@ const LoginPage = () => {
     }
   )
   const loginUser = async (data) => {
-   
-  
+    // console.log("Data being sent to login API:", data);
+
     const response = await axios({
       method: "POST",
       url: "/api/auth/login",
       data: data
     })
- 
+
+    // console.log("Response from login API:", response);
 
    return new Response(JSON.stringify({status:response.status}),{
     status:response.status,

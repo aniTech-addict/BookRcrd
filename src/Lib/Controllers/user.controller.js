@@ -119,17 +119,15 @@ export async function loginUser(data) {
   try {
     await connectDb();
 
-    // // Enhanced input validation
-    // const inputValidation = validateInput(data, ['email', 'password']);
-    // if (!inputValidation.valid) {
-    //   return createErrorResponse(HTTP_STATUS.BAD_REQUEST, inputValidation.message);
-    // }
+    
     console.log("reached controller")
-    console.log("data:->"+data);
+    console.log("data:->",data);
 
     const existingUser = await USER.findOne({username:data.username})
-    .select('+password refreshToken username email'); // Explicitly include password for comparison
+    .select('password refreshToken username email');
 
+    console.log("User found in DB:", existingUser);
+    
     console.log(existingUser);
 
     if (!existingUser) {

@@ -4,6 +4,9 @@ import {loginUser} from "@/Lib/Controllers/user.controller.js";
 export async function POST(req){
     // req = {username||email, password}
     const data = await req.json();
+    
+    // console.log("Data from route:🔴 ", data)
+
     const controllerResponse = await loginUser(data);
     if(controllerResponse.status === 400 || controllerResponse.status === 404 || controllerResponse.status === 409){
         return new Response(JSON.stringify({
@@ -13,7 +16,7 @@ export async function POST(req){
         }), { status: controllerResponse.status })
     }
 
-    //controller res = 
+    
     if (controllerResponse.status === 200) {
     const  accessToken  = controllerResponse.accessTOken;
 

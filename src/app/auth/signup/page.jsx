@@ -16,6 +16,8 @@ const SignupPage = () => {
     }
   )
 
+  const [userExists, setUserExists] = useState(false);
+
   async function postUser(data){
       try {
         const response = await axios({
@@ -29,6 +31,9 @@ const SignupPage = () => {
         }
       } catch (error) {
         console.error("Error posting user:", error)
+        if(error.response.status == 409){
+          setUserExists(true);
+        }
       }
     }
 

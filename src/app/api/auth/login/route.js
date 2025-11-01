@@ -5,7 +5,7 @@ export async function POST(req){
     // req = {username||email, password}
     const data = await req.json();
     const controllerResponse = await loginUser(data);
-    if(response.status === 400 || response.status === 404 || response.status === 409){
+    if(controllerResponse.status === 400 || controllerResponse.status === 404 || controllerResponse.status === 409){
         return new Response(JSON.stringify({
             status:controllerResponse.status,
             message:controllerResponse.message,
@@ -23,7 +23,7 @@ export async function POST(req){
     });
 
     // set httpOnly cookie
-    res.cookies.set("accessToken", accessToken, {
+    res.cookies.set("accessToken", controllerResponse.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

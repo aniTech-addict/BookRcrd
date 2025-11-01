@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import USER from "@/Lib/Models/User.model";
 
 export  function createAccessToken(user) {
   const payload = {
@@ -28,4 +29,5 @@ export function createRefreshToken(user){
     })
 
     return token
+    
 }

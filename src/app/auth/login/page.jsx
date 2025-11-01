@@ -3,6 +3,7 @@
 import {useForm} from "react-hook-form"
 import Link from "next/link";
 import axios from "axios"
+import { useState } from "react";
 
 const LoginPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(
@@ -31,6 +32,11 @@ const LoginPage = () => {
 
   }
 
+  function handleEmail(){
+    setUseEmail(true);
+  }
+  const [useEmail, setUseEmail] = useState(false);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -44,8 +50,10 @@ const LoginPage = () => {
           
           <div className="mb-4 ">
             <div className="flex flex-row gap-3">
-              Username:
-            <input {...register("username",{required:"Required Field"})}/>
+              {
+                `${useEmail? "Email:" : "Username:"}`
+              }
+            <input {...register(`${useEmail? "email" : "username"}`,{required:"Required Field"})}/>
             </div>
           </div>
 
@@ -63,6 +71,10 @@ const LoginPage = () => {
               Login
             </button>
           </div>
+
+          <button className="p-2 text-yellow-200" onClick={handleEmail}>
+            Use Email instead?
+          </button>
 
         </form>
       </div>

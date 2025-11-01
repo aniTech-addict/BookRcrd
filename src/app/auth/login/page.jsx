@@ -3,6 +3,7 @@
 import {useForm} from "react-hook-form"
 import Link from "next/link";
 import axios from "axios"
+import { useState } from "react";
 
 const LoginPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(
@@ -14,14 +15,15 @@ const LoginPage = () => {
     }
   )
   const loginUser = async (data) => {
-   
-  
+    // console.log("Data being sent to login API:", data);
+
     const response = await axios({
       method: "POST",
       url: "/api/auth/login",
       data: data
     })
- 
+
+    // console.log("Response from login API:", response);
 
    return new Response(JSON.stringify({status:response.status}),{
     status:response.status,
@@ -29,6 +31,11 @@ const LoginPage = () => {
    })
 
   }
+
+  function handleEmail(){
+    setUseEmail(true);
+  }
+  const [useEmail, setUseEmail] = useState(false);
 
 
   return (
@@ -43,8 +50,10 @@ const LoginPage = () => {
           
           <div className="mb-4 ">
             <div className="flex flex-row gap-3">
-              Username:
-            <input {...register("username",{required:"Required Field"})}/>
+              {
+                `${useEmail? "Email:" : "Username:"}`
+              }
+            <input {...register(`${useEmail? "email" : "username"}`,{required:"Required Field"})}/>
             </div>
           </div>
 
@@ -62,6 +71,10 @@ const LoginPage = () => {
               Login
             </button>
           </div>
+
+          <button className="p-2 text-yellow-200" onClick={handleEmail}>
+            Use Email instead?
+          </button>
 
         </form>
       </div>

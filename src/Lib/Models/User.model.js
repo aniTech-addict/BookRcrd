@@ -26,7 +26,10 @@ const UserSchema = new mongoose.Schema({
     {timestamps:true})
 
 UserSchema.pre("save", function(next) {
-    this.password = passwordEncrypt(this.password);
+    // Only encrypt password if it's being modified or is new
+    if (this.isModified('password') || this.isNew) {
+        this.password = passwordEncrypt(this.password);
+    }
     next();
 })
 

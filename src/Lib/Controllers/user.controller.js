@@ -5,27 +5,8 @@ import { createAccessToken, createRefreshToken } from '../Utils/createToken.util
 import connectDb from "@/Lib/Db/connectDb";
 import bcrypt from "bcrypt";
 
-// Constants for better maintainability
-const HTTP_STATUS = {
-  BAD_REQUEST: 400,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  UNAUTHORIZED: 401,
-  CREATED: 201,
-  SUCCESS: 200
-};
+import {HTTP_STATUS, MESSAGES} from '../Utils/constants.util.js'
 
-const MESSAGES = {
-  VALIDATION_ERROR: "Invalid input data provided",
-  USER_EXISTS: "User already exists. Please try logging in instead",
-  USER_NOT_FOUND: "Invalid credentials provided",
-  PASSWORD_INVALID: "Invalid credentials provided",
-  USER_CREATED: "User created successfully",
-  USER_AUTHENTICATED: "User authenticated successfully",
-  INTERNAL_ERROR: "An internal error occurred"
-};
-
-// Utility function for consistent error responses
 const createErrorResponse = (status, message) => ({
   status,
   message,
@@ -33,7 +14,6 @@ const createErrorResponse = (status, message) => ({
   timestamp: new Date().toISOString()
 });
 
-// Utility function for consistent success responses
 const createSuccessResponse = (status, message, data = {}) => ({
   status,
   message,
@@ -41,7 +21,6 @@ const createSuccessResponse = (status, message, data = {}) => ({
   ...data
 });
 
-// Input validation wrapper
 const validateInput = (data, requiredFields) => {
   for (const field of requiredFields) {
     if (!data[field] || (typeof data[field] === 'string' && data[field].trim() === '')) {
@@ -76,7 +55,7 @@ export async function createUser(data) {
         { email: data.email.toLowerCase().trim() }, 
         { username: data.username.trim() }
       ]
-    }).select('_id username email'); // Only select needed fields for performance
+    }).select('_id username email'); 
 
     if (existingUser) {
       return createErrorResponse(HTTP_STATUS.CONFLICT, MESSAGES.USER_EXISTS);
@@ -140,18 +119,16 @@ export async function loginUser(data) {
   try {
     await connectDb();
 
-    // Enhanced input validation
-    const inputValidation = validateInput(data, ['email', 'password']);
-    if (!inputValidation.valid) {
-      return createErrorResponse(HTTP_STATUS.BAD_REQUEST, inputValidation.message);
-    }
+    
+    console.log("reached controller")
+    console.log("data:->",data);
 
-    const existingUser = await USER.findOne({
-      $or: [
-        { email: data.email.toLowerCase().trim() }, 
-        { username: data.username?.trim() }
-      ]
-    }).select('+password refreshToken username email'); // Explicitly include password for comparison
+    const existingUser = await USER.findOne({username:data.username})
+    .select('password refreshToken username email');
+
+    console.log("User found in DB:", existingUser);
+    
+    console.log(existingUser);
 
     if (!existingUser) {
       return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.USER_NOT_FOUND);

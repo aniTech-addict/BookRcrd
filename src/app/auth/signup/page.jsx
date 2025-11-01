@@ -3,7 +3,6 @@ import {useForm} from "react-hook-form"
 import axios from "axios"
 import Link from "next/link"
 import { useState } from "react";
-import { set } from "mongoose";
 
 const SignupPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(

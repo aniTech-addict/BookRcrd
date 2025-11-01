@@ -1,6 +1,10 @@
 "use client"
 import {useForm} from "react-hook-form"
 import axios from "axios"
+import Link from "next/link"
+import { useState } from "react";
+import { set } from "mongoose";
+
 const SignupPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(
     {
@@ -19,7 +23,10 @@ const SignupPage = () => {
           url: "/api/auth/signup",
           data: data
         })
-        console.log(response)
+        console.log("🔴"+response)
+        if(response.status === 409){
+          setUserExists(true)
+        }
       } catch (error) {
         console.error("Error posting user:", error)
       }
@@ -28,6 +35,8 @@ const SignupPage = () => {
   const onSubmit = handleSubmit(async (data) => {
     await postUser(data);
   });
+
+  const [userExists, setUserExists] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -61,6 +70,12 @@ const SignupPage = () => {
           <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Signup
           </button>
+
+          <p className={`p-2 ${userExists ? "visible" : "invisible"}`}>
+            User already exits. Please
+            <Link href="/auth/login" className="hover:text-amber-300">  login </Link>
+            instead.
+          </p>
 
         </form>
       </div>

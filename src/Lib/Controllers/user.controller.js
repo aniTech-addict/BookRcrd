@@ -5,27 +5,8 @@ import { createAccessToken, createRefreshToken } from '../Utils/createToken.util
 import connectDb from "@/Lib/Db/connectDb";
 import bcrypt from "bcrypt";
 
-// Constants for better maintainability
-const HTTP_STATUS = {
-  BAD_REQUEST: 400,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  UNAUTHORIZED: 401,
-  CREATED: 201,
-  SUCCESS: 200
-};
+import {HTTP_STATUS, MESSAGES} from '../Utils/constants.util.js'
 
-const MESSAGES = {
-  VALIDATION_ERROR: "Invalid input data provided",
-  USER_EXISTS: "User already exists. Please try logging in instead",
-  USER_NOT_FOUND: "Invalid credentials provided",
-  PASSWORD_INVALID: "Invalid credentials provided",
-  USER_CREATED: "User created successfully",
-  USER_AUTHENTICATED: "User authenticated successfully",
-  INTERNAL_ERROR: "An internal error occurred"
-};
-
-// Utility function for consistent error responses
 const createErrorResponse = (status, message) => ({
   status,
   message,
@@ -33,7 +14,6 @@ const createErrorResponse = (status, message) => ({
   timestamp: new Date().toISOString()
 });
 
-// Utility function for consistent success responses
 const createSuccessResponse = (status, message, data = {}) => ({
   status,
   message,
@@ -41,7 +21,6 @@ const createSuccessResponse = (status, message, data = {}) => ({
   ...data
 });
 
-// Input validation wrapper
 const validateInput = (data, requiredFields) => {
   for (const field of requiredFields) {
     if (!data[field] || (typeof data[field] === 'string' && data[field].trim() === '')) {
@@ -76,7 +55,7 @@ export async function createUser(data) {
         { email: data.email.toLowerCase().trim() }, 
         { username: data.username.trim() }
       ]
-    }).select('_id username email'); // Only select needed fields for performance
+    }).select('_id username email'); 
 
     if (existingUser) {
       return createErrorResponse(HTTP_STATUS.CONFLICT, MESSAGES.USER_EXISTS);
@@ -157,11 +136,11 @@ export async function loginUser(data) {
       return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.USER_NOT_FOUND);
     }
 
-    //const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
+    const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
     
-    // if (!isPasswordValid) {
-    //   return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.PASSWORD_INVALID);
-    // }
+    if (!isPasswordValid) {
+      return createErrorResponse(HTTP_STATUS.UNAUTHORIZED, MESSAGES.PASSWORD_INVALID);
+    }
     
     const userData = {
       id: existingUser._id,

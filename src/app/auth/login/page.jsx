@@ -2,6 +2,7 @@
 
 import {useForm} from "react-hook-form"
 import Link from "next/link";
+import axios from "axios"
 
 const LoginPage = () => {
   const {register, handleSubmit, formState: {errors}} = useForm(
@@ -13,16 +14,14 @@ const LoginPage = () => {
     }
   )
   const loginUser = async (data) => {
-    const response= null;
-  try{
-      response = await axios({
+   
+  
+    const response = await axios({
       method: "POST",
       url: "/api/auth/login",
       data: data
     })
-  } catch(error){
-      console.error("Error logging in:", error)
-    }
+ 
 
    return new Response(JSON.stringify({status:response.status}),{
     status:response.status,
@@ -57,7 +56,7 @@ const LoginPage = () => {
           </div>
 
           <div className="flex width-full items-center justify-between">
-            <button type="submit" className="width-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded 
+            <button type="submit" className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded 
               focus:outline-none focus:shadow-outline"
             >
               Login

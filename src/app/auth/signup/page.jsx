@@ -40,7 +40,6 @@ const SignupPage = () => {
     await postUser(data);
   });
 
-  const [userExists, setUserExists] = useState(false);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
